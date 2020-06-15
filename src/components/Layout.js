@@ -1,18 +1,24 @@
 import React from 'react';
+import styled from 'styled-components';
+import GlobalStyles from '../styled/GlobalStyles';
 import Header from './Header';
 
-import './layout.css';
+const Content = styled.div`
+  padding: 1em;
+  padding-top: 100px;
+`;
 
 const Layout = (props) => {
   const { children } = props;
   return (
     <>
+      <GlobalStyles />
       <Header />
-      <div className='content'>
+      <Content>
         {
           children
         }
-      </div>
+      </Content>
     </>
   );
 };
