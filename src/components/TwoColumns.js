@@ -11,9 +11,9 @@ const Container = styled.div`
 `;
 
 const TwoColumns = (props) => {
-  const { children } = props;
+  const { className, children } = props;
   return (
-    <Container>
+    <Container className={className}>
       {
         children
       }
