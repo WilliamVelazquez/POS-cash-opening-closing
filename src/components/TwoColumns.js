@@ -5,7 +5,7 @@ const Container = styled.div`
   display: grid;
   grid-gap: 20px;
   grid-template-columns: 1fr;
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 1024px) {
     grid-template-columns: 1fr 1fr;
   }
 `;

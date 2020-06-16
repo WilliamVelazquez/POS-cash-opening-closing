@@ -9,8 +9,8 @@ const MainButton = styled.button`
   outline: none;
   cursor: pointer;
   font-weight: 600;
-  padding: 8px 30px;
-  border-radius: 6px;
+  padding: 10px 30px;
+  border-radius: 10px;
   color: ${(props) => props.textColor};
   background: ${(props) => props.background};
   &:hover{
