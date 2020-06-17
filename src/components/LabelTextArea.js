@@ -41,6 +41,10 @@ const TextArea = styled.textarea`
     outline: none;
     box-shadow: 0 0 5px rgba(68, 83, 226, 0.6);
   }
+  &:disabled {
+    cursor: not-allowed;
+    background-color: rgba(68, 83, 226, 0.15);
+  }
   @media screen and (min-width: 768px) {
     padding: 22px;
     font-size: 16px;
@@ -48,7 +52,7 @@ const TextArea = styled.textarea`
 `;
 
 const CommentInput = (props) => {
-  const { id = null, label = '', name, value = '', placeholder = '', rows = 3, onChange = null, className } = props;
+  const { id = null, label = '', name, value = '', placeholder = '', rows = 3, onChange = null, disabled = null, className } = props;
   return (
     <MainContainer className={className}>
       <Label htmlFor={id || name || label}>{label}</Label>
@@ -60,6 +64,7 @@ const CommentInput = (props) => {
           rows={rows}
           value={value}
           onChange={onChange}
+          disabled={disabled}
         />
       </CommentInputContainer>
     </MainContainer>

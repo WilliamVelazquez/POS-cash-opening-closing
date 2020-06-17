@@ -16,6 +16,10 @@ const MainButton = styled.button`
   &:hover{
     background-color: ${(props) => props.hoverBackground};
   }
+  &:disabled {
+    cursor: not-allowed;
+    background-color: rgba(68, 83, 226, 0.6);
+  }
 `;
 
 const Button = ({
@@ -26,8 +30,10 @@ const Button = ({
   textColor = '#ffffff',
   background = '#4453e2',
   hoverBackground = '#5061d4',
+  disabled = null,
+  visible = true,
 }) => {
-  if (!text) return null;
+  if (!text || !visible) return null;
   return (
     <MainButton
       type={type}
@@ -36,6 +42,7 @@ const Button = ({
       textColor={textColor}
       background={background}
       hoverBackground={hoverBackground}
+      disabled={disabled}
     >
       {text}
     </MainButton>

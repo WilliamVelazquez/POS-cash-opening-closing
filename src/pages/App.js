@@ -15,9 +15,9 @@ const App = () => {
   return (
     <Layout>
       <TwoColumns>
-        <CashOpening setActiveOpen={setActiveOpen} />
+        <CashOpening activeOpen={activeOpen} setActiveOpen={setActiveOpen} setIsLoading={setIsLoading} />
         <DottedLine />
-        <CashClosing activeOpen={activeOpen} />
+        <CashClosing activeOpen={activeOpen} setIsLoading={setIsLoading} />
       </TwoColumns>
       {isLoading && <CubeLoader />}
     </Layout>
