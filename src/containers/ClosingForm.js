@@ -1,6 +1,8 @@
 /* eslint-disable react/jsx-indent-props */
 import React from 'react';
 import styled from 'styled-components';
+import { getCurrentDate, getCurrentTime, currencyToCents, centsToNormal } from 'Utils/utilities';
+
 import TwoColumns from '../components/TwoColumns';
 import LabelInput from '../components/LabelInput';
 import Button from '../components/Button';
@@ -30,13 +32,17 @@ const Form = styled.form`
 `;
 
 const ClosingForm = ({ loadedData = {} }) => {
+  console.log(loadedData);
+  // console.log(centsToNormal(loadedData.close).toFixed(2));
+
   const defaultData = {
-    closingDate: '',
-    closingTime: '',
-    closingCashSales: '',
-    closingCreditSales: '',
-    closingSalesTotal: '',
-    closingOpeningTotal: '',
+    closingDate: getCurrentDate() || '',
+    closingTime: getCurrentTime() || '',
+    closingCashSales: (loadedData.close && `$${centsToNormal(loadedData.close).toFixed(2)}`) || '$0.00',
+    closingCreditSales: (loadedData.card && `$${centsToNormal(loadedData.card).toFixed(2)}`) || '$0.00',
+    closingSalesTotal: (loadedData.close && loadedData.card && `$${centsToNormal((parseInt(loadedData.close, 10) + parseInt(loadedData.card, 10))).toFixed(2)}`) || '$0.00',
+    closingOpeningTotal: (loadedData.value && `$${centsToNormal(loadedData.value).toFixed(2)}`) || '$0.00',
+    closingTotal: (loadedData.close && loadedData.value && `$${centsToNormal((parseInt(loadedData.close, 10) + parseInt(loadedData.value, 10))).toFixed(2)}`) || '$0.00',
   };
   const [data, handleChange, handleData] = useForm(defaultData);
 
@@ -99,6 +105,15 @@ const ClosingForm = ({ loadedData = {} }) => {
             onChange={handleChange}
             id='closingOpeningTotal'
             label='Total de apertura'
+            type='text'
+            pattern={currencyPattern}
+            disabled
+          />
+          <LabelInput
+            value={data.closingTotal}
+            onChange={handleChange}
+            id='closingTotal'
+            label='Total de caja'
             type='text'
             pattern={currencyPattern}
             disabled
