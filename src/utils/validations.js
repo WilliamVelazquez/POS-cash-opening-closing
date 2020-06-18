@@ -14,4 +14,6 @@ export const time24HPattern = '([01]?[0-9]|2[0-3]):[0-5][0-9]';
 
 export const currencyPattern = '^\$\d{1,3}(,\d{3})*(\.\d+)?$';
 
-export const currencyRegex = /(?=.*\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|0)?(\.\d{1,2})?$/;
+export const currencyRegex = /(?=.*\d)^\$?-?(([1-9]\d{0,8})|0)?(\.\d{1,2})?$/;
+
+export const currencyCommaRegex = /(?=.*\d)^\$?-?(([1-9]\d{0,2}(,\d{3})*)|0)?(\.\d{1,2})?$/;

@@ -44,8 +44,7 @@ class Api {
         throw Error(response.mensaje);
       } else {
         const json = await response.json();
-        //DEBUG-->
-        console.log('JSON:', json);
+        //DEBUG-->console.log('JSON:', json);
         callback && await callback(json);
       }
     } catch (error) {
