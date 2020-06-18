@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-indent-props */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { getCurrentDate, getCurrentTime, currencyToCents, centsToNormal } from 'Utils/utilities';
+import { currencyRegex } from 'Utils/validations';
 
 import TwoColumns from '../components/TwoColumns';
 import LabelInput from '../components/LabelInput';
@@ -9,6 +10,7 @@ import Button from '../components/Button';
 import useForm from '../hooks/useForm';
 
 import { dateYYYYMMDDPattern, time24HPattern, currencyPattern } from '../utils/validations';
+import Expenses from './Expenses';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -19,6 +21,12 @@ const MainContainer = styled.div`
 
 const CustomTwoColumns = styled(TwoColumns)`
   margin-bottom: 20px;
+`;
+
+const ExpensesContainer = styled.div`
+  display: grid;
+  grid-gap: 15px;
+  justify-content: center;
 `;
 
 const Form = styled.form`
@@ -32,7 +40,8 @@ const Form = styled.form`
 `;
 
 const ClosingForm = ({ loadedData = {} }) => {
-  console.log(loadedData);
+  const [expenses, setExpenses] = useState([]);
+  // console.log(loadedData);
   // console.log(centsToNormal(loadedData.close).toFixed(2));
 
   const defaultData = {
@@ -46,9 +55,26 @@ const ClosingForm = ({ loadedData = {} }) => {
   };
   const [data, handleChange, handleData] = useForm(defaultData);
 
+  const calculateExpenses = () => {
+    const totalExpenses = expenses.reduce((total, expense) => {
+      // console.log(expense.value);
+      return total + ((expense.value.match(currencyRegex) ? currencyToCents(expense.value) : 0));
+    }, 0);
+    // console.log('totalExpenses', totalExpenses);
+    return totalExpenses;
+  };
+
+  const calculateClosingCash = () => {
+    // return (loadedData.close && loadedData.value && `$${centsToNormal((parseInt(loadedData.close, 10) + parseInt(loadedData.value, 10))).toFixed(2)}`) || '$0.00';
+    const closingCash = (loadedData.close && loadedData.value && (parseInt(loadedData.close, 10) + parseInt(loadedData.value, 10) - calculateExpenses())) || 0;
+    // console.log('closingCash', closingCash);
+    return closingCash;
+  };
+
   const handleSubmit = async (event) => {
     const formData = handleData(event);
     console.log(formData);
+    calculateExpenses();
   };
 
   return (
@@ -119,7 +145,14 @@ const ClosingForm = ({ loadedData = {} }) => {
             disabled
           />
         </CustomTwoColumns>
-        <Button text={`Cerrar caja con $${data.closingOpeningTotal || '0.00'}`} onClick={handleSubmit} />
+        <ExpensesContainer>
+          <Expenses expenses={expenses} setExpenses={setExpenses} />
+        </ExpensesContainer>
+        <Button
+          text={`Cerrar caja con ${`$${centsToNormal(calculateClosingCash()).toFixed(2)}` || '$0.00'}`}
+          onClick={(calculateClosingCash() < 0) ? null : handleSubmit}
+          disabled={calculateClosingCash() < 0}
+        />
       </Form>
     </MainContainer>
   );

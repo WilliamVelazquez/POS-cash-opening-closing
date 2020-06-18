@@ -20,7 +20,7 @@ const CashOpening = (props) => {
     const serviceURL = '/cashier/balance';
     Api.apiGet(serviceURL, (json) => {
       if (json.status !== 'Success') {
-        console.log('error');
+        console.log('getCashOpeningData error');
       } else {
         // console.log('json.results', json.results);
         setResults({ ...json.results });
@@ -35,7 +35,7 @@ const CashOpening = (props) => {
   useEffect(() => {
     setIsLoading(true);
     getCashOpeningData();
-  }, [null]);
+  }, [activeOpen]);
 
   useEffect(() => {
     // console.log('results.value_open', results.value_open);
@@ -48,7 +48,7 @@ const CashOpening = (props) => {
       {
         isEmptyObject(results) ?
         <NoDataMessage text='Información no disponible' /> :
-        <OpeningForm loadedData={results} activeOpen={activeOpen} />
+        <OpeningForm loadedData={results} activeOpen={activeOpen} setActiveOpen={setActiveOpen} />
       }
     </Container>
   );

@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-indent-props */
 import React from 'react';
 import styled from 'styled-components';
+import Api from 'Utils/api';
 import { openingSubmitValidation, dateYYYYMMDDPattern, time24HPattern, currencyPattern, currencyRegex } from 'Utils/validations';
 import { currencyToCents, cleanText, centsToNormal } from 'Utils/utilities';
 
@@ -27,7 +28,7 @@ const Form = styled.form`
   }
 `;
 
-const OpeningForm = ({ loadedData = {}, activeOpen }) => {
+const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null }) => {
   // console.log('loadedData', loadedData);
   const defaultData = {
     openingDate: loadedData.date_open.split('-').join('/') || '',
@@ -38,6 +39,21 @@ const OpeningForm = ({ loadedData = {}, activeOpen }) => {
   };
 
   const [data, handleChange, handleData] = useForm(defaultData);
+
+  const saveCashOpening = (body) => {
+    const serviceURL = '/cashier/balance/open/day';
+    Api.apiPost(serviceURL, body, (json) => {
+      if (json.status !== 'Información guardada con éxito') {
+        console.log('saveCashOpening error');
+      } else {
+        // console.log('json.results', json.results);
+        setActiveOpen(true);
+        setIsLoading(false);
+      }
+    }, () => {
+      setIsLoading(false);
+    });
+  };
 
   const handleSubmit = async (event) => {
     const formData = handleData(event);
@@ -54,6 +70,8 @@ const OpeningForm = ({ loadedData = {}, activeOpen }) => {
         'observation': cleanText(formData.openingObservations),
       };
       console.log(saveObj);
+      setIsLoading(true);
+      saveCashOpening(saveObj);
     } else {
       console.log('Initial Total not valid!');
     }
