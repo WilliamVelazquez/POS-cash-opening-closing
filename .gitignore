@@ -10,3 +10,6 @@ bower_components
 *.sublime*
 
 .env
+
+test/cypress/integration/examples
+test/cypress/screenshots/
