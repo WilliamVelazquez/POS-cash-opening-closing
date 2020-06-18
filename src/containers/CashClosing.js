@@ -18,7 +18,7 @@ const CashClosing = ({ activeOpen, setIsLoading = () => console.log() }) => {
       if (json.msg !== 'Success') {
         console.log('error');
       } else {
-        console.log('json', json);
+        // console.log('json', json);
         setResults({ ...json });
         setIsLoading(false);
       }

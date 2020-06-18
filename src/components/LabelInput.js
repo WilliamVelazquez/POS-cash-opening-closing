@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import EyeIcon from './EyeIcon';
 import useToggle from '../hooks/useToggle';
+import { errorInputShadow } from '../styled/mixins';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -33,6 +34,7 @@ const Input = styled.input`
   padding-top: 3px;
   padding-bottom: 2px;
   border-bottom: 2px solid #041B2D;
+  ${(props) => props.withError && errorInputShadow}
   @media screen and (min-width: 768px) {
     font-size: 18px;
   }
@@ -48,7 +50,7 @@ const CustomEyeIcon = styled(EyeIcon)`
   margin: 5px -30px;
 `;
 
-const LabelInput = ({ id = null, label = '', name, type = null, value = '', autoComplete = null, pattern = null, placeholder = '', onChange = null, required = null, disabled = null, blocked = true }) => {
+const LabelInput = ({ id = null, label = '', name, type = null, value = '', autoComplete = null, pattern = null, placeholder = '', onChange = null, required = null, disabled = null, withError = null, blocked = true }) => {
   const [isBlocked, toggleIsBlocked] = useToggle(blocked);
   if (!label) return null;
   return (
@@ -66,6 +68,7 @@ const LabelInput = ({ id = null, label = '', name, type = null, value = '', auto
           required={required}
           disabled={disabled}
           onChange={onChange}
+          withError={withError}
         />
         {
           type === 'password' &&

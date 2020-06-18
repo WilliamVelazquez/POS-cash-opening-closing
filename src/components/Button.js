@@ -29,7 +29,7 @@ const Button = ({
   className,
   textColor = '#ffffff',
   background = '#4453e2',
-  hoverBackground = '#5061d4',
+  hoverBackground = '#5e71f5', //'#5061d4',
   disabled = null,
   visible = true,
 }) => {
