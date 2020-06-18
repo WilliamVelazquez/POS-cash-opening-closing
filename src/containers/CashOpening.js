@@ -48,7 +48,7 @@ const CashOpening = (props) => {
       {
         isEmptyObject(results) ?
         <NoDataMessage text='Información no disponible' /> :
-        <OpeningForm loadedData={results} activeOpen={activeOpen} setActiveOpen={setActiveOpen} />
+        <OpeningForm loadedData={results} activeOpen={activeOpen} setActiveOpen={setActiveOpen} setIsLoading={setIsLoading} />
       }
     </Container>
   );

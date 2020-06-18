@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Api from 'Utils/api';
+import useNotification from '../hooks/useNotification';
 import { openingSubmitValidation, dateYYYYMMDDPattern, time24HPattern, currencyPattern, currencyRegex } from 'Utils/validations';
 import { currencyToCents, cleanText, centsToNormal } from 'Utils/utilities';
 
@@ -10,6 +11,7 @@ import LabelInput from '../components/LabelInput';
 import LabelTextArea from '../components/LabelTextArea';
 import Button from '../components/Button';
 import useForm from '../hooks/useForm';
+import Notification from '../components/Notification';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -28,7 +30,7 @@ const Form = styled.form`
   }
 `;
 
-const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null }) => {
+const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null, setIsLoading = null }) => {
   // console.log('loadedData', loadedData);
   const defaultData = {
     openingDate: loadedData.date_open.split('-').join('/') || '',
@@ -39,19 +41,23 @@ const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null }) => {
   };
 
   const [data, handleChange, handleData] = useForm(defaultData);
+  const [message, showMessage, closeMessage, isNotifying] = useNotification();
 
   const saveCashOpening = (body) => {
     const serviceURL = '/cashier/balance/open/day';
     Api.apiPost(serviceURL, body, (json) => {
-      if (json.status !== 'Información guardada con éxito') {
+      if (json.msg !== 'Información guardada con éxito') {
         console.log('saveCashOpening error');
+        showMessage(json.msg);
       } else {
-        // console.log('json.results', json.results);
+        console.log('saveCashOpening-json', json);
+        showMessage(json.msg);
         setActiveOpen(true);
-        setIsLoading(false);
       }
+      setIsLoading(false);
     }, () => {
       setIsLoading(false);
+      showMessage('Error al guardar');
     });
   };
 
@@ -127,6 +133,11 @@ const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null }) => {
         />
         <Button text='Enviar' onClick={!openingSubmitValidation(data.openingInitialTotal) ? handleSubmit : null} disabled={(openingSubmitValidation(data.openingInitialTotal) || !data.openingInitialTotal.match(currencyRegex))} visible={!activeOpen} />
       </Form>
+      <Notification
+        isNotifying={isNotifying}
+        close={closeMessage}
+        message={message}
+      />
     </MainContainer>
   );
 };
