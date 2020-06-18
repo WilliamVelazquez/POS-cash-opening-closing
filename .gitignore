@@ -13,3 +13,4 @@ bower_components
 
 test/cypress/integration/examples
 test/cypress/screenshots/
+test/cypress/videos/

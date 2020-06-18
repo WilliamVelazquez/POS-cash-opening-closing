@@ -4,11 +4,9 @@
   "description": "Point of Sale, Cash Opening/Closing developed with ReactJs and using mipos.dev API.",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
     "dev": "webpack-dev-server --open --config ./webpack.dev.config.js",
-    "local": "webpack --env.NODE_ENV=local --env.production --progress",
-    "prod": "webpack -p --env.NODE_ENV=production --env.production --progress",
-    "test": "cypress open --project ./test"
+    "test": "cypress open --project ./test",
+    "test:run": "cypress run --project ./test"
   },
   "repository": {
     "type": "git",
