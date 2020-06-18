@@ -1,12 +1,15 @@
 /* eslint-disable react/jsx-indent-props */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Api from 'Utils/api';
 import { getCurrentDate, getCurrentTime, currencyToCents, centsToNormal } from 'Utils/utilities';
 import { currencyRegex } from 'Utils/validations';
+import useNotification from '../hooks/useNotification';
 
 import TwoColumns from '../components/TwoColumns';
 import LabelInput from '../components/LabelInput';
 import Button from '../components/Button';
+import Notification from '../components/Notification';
 import useForm from '../hooks/useForm';
 
 import { dateYYYYMMDDPattern, time24HPattern, currencyPattern } from '../utils/validations';
@@ -39,7 +42,7 @@ const Form = styled.form`
   }
 `;
 
-const ClosingForm = ({ loadedData = {} }) => {
+const ClosingForm = ({ loadedData = {}, setActiveOpen = null, setIsLoading = null }) => {
   const [expenses, setExpenses] = useState([]);
   // console.log(loadedData);
   // console.log(centsToNormal(loadedData.close).toFixed(2));
@@ -53,7 +56,9 @@ const ClosingForm = ({ loadedData = {} }) => {
     closingOpeningTotal: (loadedData.value && `$${centsToNormal(loadedData.value).toFixed(2)}`) || '$0.00',
     closingTotal: (loadedData.close && loadedData.value && `$${centsToNormal((parseInt(loadedData.close, 10) + parseInt(loadedData.value, 10))).toFixed(2)}`) || '$0.00',
   };
+
   const [data, handleChange, handleData] = useForm(defaultData);
+  const [message, showMessage, closeMessage, isNotifying] = useNotification();
 
   const calculateExpenses = () => {
     const totalExpenses = expenses.reduce((total, expense) => {
@@ -71,10 +76,45 @@ const ClosingForm = ({ loadedData = {} }) => {
     return closingCash;
   };
 
+  const saveCashClosing = (body) => {
+    const serviceURL = '/cashier/balance/close/day';
+    Api.apiPost(serviceURL, body, (json) => {
+      if (json.msg !== 'Información guardada con éxito') {
+        console.log('saveCashClosing error');
+        showMessage(json.msg);
+      } else {
+        // console.log('saveCashClosing-json', json);
+        showMessage(json.msg);
+        setActiveOpen(false);
+      }
+      setIsLoading(false);
+    }, () => {
+      setIsLoading(false);
+      showMessage('Error al cerrar caja');
+    });
+  };
+
   const handleSubmit = async (event) => {
     const formData = handleData(event);
-    console.log(formData);
+    // console.log(formData);
     calculateExpenses();
+    if (!(calculateClosingCash() < 0)) {
+      const saveClosingObj = {
+        'date_close': formData.closingDate.split('-').join('/'),
+        'hour_close': formData.closingTime.slice(0, 8),
+        'value_card': currencyToCents(formData.closingCreditSales),
+        'value_cash': currencyToCents(formData.closingCashSales),
+        'value_close': currencyToCents(formData.closingTotal),
+        'value_open': currencyToCents(formData.closingOpeningTotal),
+        'value_sales': currencyToCents(formData.closingSalesTotal),
+        'expenses': expenses.map((expense) => { return { name: expense.reason, value: currencyToCents(expense.value) }; }),
+      };
+      // console.log(saveClosingObj);
+      setIsLoading(true);
+      saveCashClosing(saveClosingObj);
+    } else {
+      console.log('Closing value not valid!');
+    }
   };
 
   return (
@@ -91,10 +131,10 @@ const ClosingForm = ({ loadedData = {} }) => {
             disabled
           />
           <LabelInput
-            value={data.closingTime}
+            value={data.closingTime.slice(0, 5)}
             onChange={handleChange}
             id='closingTime'
-            label='Hora (hh:mm:ss)'
+            label='Hora (hh:mm)'
             type='text'
             pattern={time24HPattern}
             disabled
@@ -154,6 +194,11 @@ const ClosingForm = ({ loadedData = {} }) => {
           disabled={calculateClosingCash() < 0}
         />
       </Form>
+      <Notification
+        message={message}
+        close={closeMessage}
+        isNotifying={isNotifying}
+      />
     </MainContainer>
   );
 };

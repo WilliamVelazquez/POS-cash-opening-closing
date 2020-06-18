@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-indent-props */
 import React from 'react';
-import { cleanText, cleanCurrency, updateCurrency, currencyToCents, centsToNormal } from 'Utils/utilities';
+import { cleanText, cleanCurrency, updateCurrency } from 'Utils/utilities';
 
 import Button from '../components/Button';
 import InputExpense from '../components/InputExpense';

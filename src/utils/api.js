@@ -40,8 +40,8 @@ class Api {
 
       if (response.status !== 200) {
         //DEBUG-->
-        console.log(`Error code: ${response.status} | Message: ${response.mensaje}`);
-        throw Error(response.mensaje);
+        console.log(`Error code: ${response.status} | Message: ${response.msg}`);
+        throw Error(response.msg);
       } else {
         const json = await response.json();
         //DEBUG-->console.log('JSON:', json);

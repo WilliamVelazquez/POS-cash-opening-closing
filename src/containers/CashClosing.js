@@ -9,7 +9,7 @@ import ClosingForm from './ClosingForm';
 
 const Container = styled.section``;
 
-const CashClosing = ({ activeOpen, setIsLoading = () => console.log() }) => {
+const CashClosing = ({ activeOpen, setActiveOpen = null, setIsLoading = () => console.log() }) => {
   const [results, setResults] = useState({});
 
   const getCashOpeningData = () => {
@@ -41,7 +41,7 @@ const CashClosing = ({ activeOpen, setIsLoading = () => console.log() }) => {
       {
         (!activeOpen || isEmptyObject(results)) ?
         <NoDataMessage /> :
-        <ClosingForm loadedData={results} />
+        <ClosingForm loadedData={results} setActiveOpen={setActiveOpen} setIsLoading={setIsLoading} />
       }
     </Container>
   );

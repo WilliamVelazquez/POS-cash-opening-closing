@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-indent-props */
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Api from 'Utils/api';
-import useNotification from '../hooks/useNotification';
 import { openingSubmitValidation, dateYYYYMMDDPattern, time24HPattern, currencyPattern, currencyRegex } from 'Utils/validations';
 import { currencyToCents, cleanText, centsToNormal } from 'Utils/utilities';
+import useNotification from '../hooks/useNotification';
 
 import TwoColumns from '../components/TwoColumns';
 import LabelInput from '../components/LabelInput';
@@ -31,7 +31,6 @@ const Form = styled.form`
 `;
 
 const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null, setIsLoading = null }) => {
-  // console.log('loadedData', loadedData);
   const defaultData = {
     openingDate: loadedData.date_open.split('-').join('/') || '',
     openingTime: loadedData.hour_open.slice(0, 5) || '',
@@ -40,8 +39,13 @@ const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null, setIsL
     openingObservations: '',
   };
 
-  const [data, handleChange, handleData] = useForm(defaultData);
+  const [data, handleChange, handleData, setData] = useForm(defaultData);
   const [message, showMessage, closeMessage, isNotifying] = useNotification();
+
+  useEffect(() => {
+    // console.log('loadedData', loadedData);
+    setData(defaultData);
+  }, [loadedData]);
 
   const saveCashOpening = (body) => {
     const serviceURL = '/cashier/balance/open/day';
@@ -50,7 +54,7 @@ const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null, setIsL
         console.log('saveCashOpening error');
         showMessage(json.msg);
       } else {
-        console.log('saveCashOpening-json', json);
+        // console.log('saveCashOpening-json', json);
         showMessage(json.msg);
         setActiveOpen(true);
       }
@@ -63,21 +67,21 @@ const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null, setIsL
 
   const handleSubmit = async (event) => {
     const formData = handleData(event);
-    console.log(formData);
+    // console.log(formData);
 
     // console.log(data.openingInitialTotal.match(currencyRegex));
 
     if (!openingSubmitValidation(data.openingInitialTotal) && !!data.openingInitialTotal.match(currencyRegex)) {
-      const saveObj = {
+      const saveOpeningObj = {
         'date_open': formData.openingDate.split('-').join('/'),
         'hour_open': formData.openingTime.slice(0, 5),
         'value_previous_close': currencyToCents(formData.openingPreviousTotal),
         'value_open': currencyToCents(formData.openingInitialTotal),
         'observation': cleanText(formData.openingObservations),
       };
-      console.log(saveObj);
+      // console.log(saveOpeningObj);
       setIsLoading(true);
-      saveCashOpening(saveObj);
+      saveCashOpening(saveOpeningObj);
     } else {
       console.log('Initial Total not valid!');
     }
