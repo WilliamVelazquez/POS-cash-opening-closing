@@ -97,6 +97,7 @@ If you want to know about the insights [click here!](https://github.com/WilliamV
 
 ![Opening](./.readme-static/opening.png)
 ![Closing](./.readme-static/closing.png)
+![Expenses](./.readme-static/expenses.png)
 
 
 ### 🎁 Contribute
