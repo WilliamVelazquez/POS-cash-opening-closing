@@ -3,7 +3,12 @@
 Point of Sale, Cash Opening/Closing developed with ReactJs and using mipos.dev API.
 
 
-### 🛠 Installation
+### 🚀 Links
+
+ * **Live Demo:** https://williamvelazquez.github.io/POS-cash-opening-closing/
+
+
+### 🛠️ Installation
 ```
 npm install
 ```
@@ -17,14 +22,23 @@ TOKEN=XxXxXxXxXxXxXx
 
 ### 🖥 Execution
 
-**Development Environment**
+📌**Development Environment**
 ```
 npm run dev
 ```
 
 >This project runs on **http://localhost:3001** or the specified **PORT** on the .env file.
 
-**Testing with Interface**
+📌**Production Environment**
+
+Run the following command to create the production build over the **dist** folder:
+```
+npm run prod
+```
+
+>After creating the production build you can open the **index.html** on your browser.
+
+📌**Testing with Interface**
 ```
 npm run dev
 ```
@@ -38,7 +52,7 @@ npm run test
 ```
 After a moment a cypress window will appear, to run the test click on: **cashOpening.spec.js**
 
-**Testing from terminal**
+📌**Testing from terminal**
 ```
 npm run dev
 ```
@@ -51,8 +65,20 @@ After running the project, on other terminal run:
 npm run test:run
 ```
 
+📌**Deployment on GitHub Pages**
 
-### 🛠️ Technologies
+Run the following command to create the production build and deploy on gh-pages branch for the first time:
+```
+npm run deploy:new
+```
+
+Run the following command to create the production build and deploy if you already have the gh-pages branch:
+```
+npm run deploy
+```
+
+
+### 💻 Technologies
 
   * React
   * ESLint
@@ -65,6 +91,12 @@ npm run test:run
 * **William Velazquez** - [WilliamVelazquez](https://github.com/WilliamVelazquez)
 
 If you want to know about the insights [click here!](https://github.com/WilliamVelazquez/POS-cash-opening-closing/pulse/monthly)
+
+
+### 📷 Screenshots
+
+![Opening](./.readme-static/opening.png)
+![Closing](./.readme-static/closing.png)
 
 
 ### 🎁 Contribute
