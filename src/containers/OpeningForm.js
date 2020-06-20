@@ -126,6 +126,7 @@ const OpeningForm = ({ loadedData = {}, activeOpen, setActiveOpen = null, setIsL
             type='text'
             pattern={currencyPattern}
             disabled={activeOpen}
+            withError={!(data.openingInitialTotal.match(currencyRegex))}
           />
         </TwoColumns>
         <LabelTextArea
